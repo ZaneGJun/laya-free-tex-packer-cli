@@ -28,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
-    "free-tex-packer-core": "git+https://github.com/ZaneGJun/laya-free-tex-packer-core.git#v0.1.1",
+    "free-tex-packer-core": "git+https://github.com/ZaneGJun/laya-free-tex-packer-core.git#v1.0.0",
     "optimist": "^0.6.1"
   }
 }
