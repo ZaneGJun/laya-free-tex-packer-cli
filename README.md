@@ -1,12 +1,12 @@
-# free-tex-packer-cli
+# laya-free-tex-packer-cli
 
 [![Stats](https://nodei.co/npm/free-tex-packer-cli.png?downloads=true&stars=true)](https://www.npmjs.com/package/free-tex-packer-cli)
 
-Free texture packer CLI 
+Laya free texture packer CLI 
 
 # Install
    
-$ npm install -g free-tex-packer-cli
+$ npm install git+https://github.com/ZaneGJun/laya-free-tex-packer-cli.git
    
 # Usage
 ```
@@ -15,7 +15,7 @@ $ free-tex-packer-cli --project /path/to/project.ftpp --output /path/to/output/f
 
 # Used libs
 
-* **Free texture packer core** - https://github.com/odrick/free-tex-packer-core
+* **Free texture packer core** - https://github.com/ZaneGJun/laya-free-tex-packer-core.git
 
 ---
 License: MIT
