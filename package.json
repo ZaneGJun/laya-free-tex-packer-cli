@@ -1,9 +1,9 @@
 {
   "name": "free-tex-packer-cli",
-  "displayName": "Free texture packer CLI",
+  "displayName": "Laya free texture packer CLI",
   "version": "0.2.0",
-  "description": "Free texture packer CLI",
-  "url": "http://github.com/odrick/free-tex-packer-cli",
+  "description": "Laya free texture packer CLI",
+  "url": "https://github.com/ZaneGJun/laya-free-tex-packer-cli",
   "main": "index.js",
   "scripts": {},
   "keywords": [
@@ -23,12 +23,12 @@
   "author": "Alexander Norinchak",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/odrick/free-tex-packer-cli"
+    "url": "git+https://github.com/ZaneGJun/laya-free-tex-packer-cli#"
   },
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.1",
-    "free-tex-packer-core": "^0.2.1",
+    "free-tex-packer-core": "git+https://github.com/ZaneGJun/laya-free-tex-packer-core.git#v0.1.1",
     "optimist": "^0.6.1"
   }
 }
