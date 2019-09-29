@@ -132,6 +132,9 @@ fs.readFile(projectPath, (err, content) => {
         inputPath = path.dirname(projectPath);
     }
 
+    console.log('inputPath:' + inputPath);
+    console.log('outputDir:' + outputPath);
+
     //get all folders
     let allFolders = [];
     getFolderAllFoldersList(inputPath, allFolders);
