@@ -180,16 +180,16 @@ fs.readFile(projectPath, (err, content) => {
     options.allowRotation = project.sprite.rotation;
 
     //options.detectIdentical = true;
-    //options.allowTrim = true;
-    //options.trimMode = "trim";
+    options.allowTrim = true;
+    options.trimMode = "trim";
     //options.removeFileExtension = "false";
     //options.prependFolderName = true;
     //options.base64Export = false;
     //options.tinify = false;
     //options.tinifyKey = "";
 
-    options.packer = "MaxRectsBin";
-    options.packerMethod = "BestShortSideFit";
+    options.packer = "MaxRectsPacker";
+    options.packerMethod = "Smart";
 
     options.inputPath = inputPath;
 
