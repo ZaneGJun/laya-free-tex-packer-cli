@@ -270,6 +270,7 @@ fs.readFile(projectPath, (err, content) => {
         options.textureName = getNameFromPath(folder);
 
         //the folder scale
+        options.scale = 1;
         if(options.scaleDir[options.textureName] && options.scaleDir[options.textureName] != 1){
             options.scale = options.scaleDir[options.textureName];
         }
