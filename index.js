@@ -269,7 +269,10 @@ fs.readFile(projectPath, (err, content) => {
         //change the option texturename
         options.textureName = getNameFromPath(folder);
 
-        //TODO-get the folder scale
+        //the folder scale
+        if(options.scaleDir[options.textureName] && options.scaleDir[options.textureName] != 1){
+            options.scale = options.scaleDir[options.textureName];
+        }
 
         //TODO-get the folder filter
 
