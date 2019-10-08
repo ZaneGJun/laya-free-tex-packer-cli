@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const argv = require('optimist').argv;
 const chalk = require('chalk');
@@ -19,6 +20,16 @@ function fixPath(path) {
 
 function getNameFromPath(path) {
     return path.trim().split('/').pop();
+}
+
+function copyFolderOrFile(src, dest) {
+    fse.copy(src, dest, err => {
+        if (err){
+            console.log(chalk.redBright(err));
+        }
+
+        console.log(chalk.greenBright("copy: " + src + " to: " + dest + " success!"));
+    });
 }
 
 function isFolder(path) {
@@ -62,17 +73,41 @@ function getFolderAllFoldersList(dir, list = []) {
     }
 }
 
-function getFolderLocalFilesList(dir, list = []) {
+function getFolderLocalFilesList(dir, list = [], excludeList) {
     let files = fs.readdirSync(dir);
     for(let file of files) {
         let p = path.resolve(dir, file);
         if(isFolder(p) && p.toUpperCase().indexOf('__MACOSX') < 0) {
 
         }else {
+            if(excludeList.indexOf(p) != -1){
+                console.log(chalk.yellowBright("exclude file:" + p));
+                continue;
+            }
+
             list.push({
                 name: file,
                 path: p,
             });
+        }
+    }
+
+    return list;
+}
+
+function getFolderLocalExcludeFilesList(dir, list = [], excludeList) {
+    let files = fs.readdirSync(dir);
+    for(let file of files) {
+        let p = path.resolve(dir, file);
+        if(isFolder(p) && p.toUpperCase().indexOf('__MACOSX') < 0) {
+
+        }else {
+            if(excludeList.indexOf(p) != -1){
+                list.push({
+                    name: file,
+                    path: p,
+                });
+            }
         }
     }
 
@@ -193,12 +228,42 @@ fs.readFile(projectPath, (err, content) => {
 
     options.inputPath = inputPath;
 
+    options.includeList = project.includeList;
+    options.excludeList = project.excludeList;
+    options.extrudeList = project.extrudeList;
+
+    options.scaleDir = project.scaleDir;
+
+    console.log(options.excludeList);
+
     //pack all single folder 
     for(let folder of allFolders){
+        if(options.excludeList.indexOf(folder) != -1){
+            console.log(chalk.yellowBright("exclude folder:" + folder));
+
+            let out = path.resolve(outputPath, folder.replace(inputPath + "\\", ""));
+            let outDir = path.dirname(out);
+            if(!isExists(outDir)) {
+                fs.mkdirSync(outDir, { recursive: true });
+            }
+            copyFolderOrFile(folder, out);
+            continue;
+        }
+
         let files = [];
         if(isExists(folder)) {
-            let list = getFolderLocalFilesList(folder);
+            let list = getFolderLocalFilesList(folder, [], options.excludeList);
             loadImages(list, files);
+            let excludeList = getFolderLocalExcludeFilesList(folder, [], options.excludeList);
+
+            for(let file of excludeList){
+                let out = path.resolve(outputPath, file.path.replace(inputPath + "\\", ""));
+                let outDir = path.dirname(out);
+                if(!isExists(outDir)) {
+                    fs.mkdirSync(outDir, { recursive: true });
+                }
+                copyFolderOrFile(file.path, out);
+            }
         }
 
         //change the option texturename
@@ -224,30 +289,5 @@ fs.readFile(projectPath, (err, content) => {
             console.log(chalk.yellowBright("Done"));
         });
     }
-
-    // let files = [];
-
-    // loadImages(project.images, files);
-
-    // for(let folder of project.folders) {
-    //     if(isExists(folder)) {
-    //         let list = getFolderFilesList(folder, getNameFromPath(folder) + '/');
-    //         loadImages(list, files);
-    //     }
-    // }
-
-    
-    
-    // console.log(chalk.white('Start packing ') + chalk.magentaBright(projectPath));
-
-    // texturePacker(files, options, (files) => {
-    //     for(let file of files) {
-    //         let out = path.resolve(outputPath, file.name);
-    //         console.log(chalk.white('Writing ') + chalk.greenBright(out));
-    //         fs.writeFileSync(out, file.buffer);
-    //     }
-
-    //     console.log(chalk.yellowBright("Done"));
-    // });
 });
 
