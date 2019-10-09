@@ -22,6 +22,10 @@ function getNameFromPath(path) {
     return path.trim().split('/').pop();
 }
 
+function getExt(path) {
+    return path.trim().split('.').pop().toLowerCase();
+}
+
 function copyFolderOrFile(src, dest) {
     fse.copy(src, dest, err => {
         if (err){
@@ -102,11 +106,19 @@ function getFolderLocalExcludeFilesList(dir, list = [], excludeList) {
         if(isFolder(p) && p.toUpperCase().indexOf('__MACOSX') < 0) {
 
         }else {
-            if(excludeList.indexOf(p) != -1){
+            let fileExt = getExt(p);
+            if(fileExt != 'png' && fileExt != 'jpg'){
                 list.push({
                     name: file,
                     path: p,
                 });
+            }else{
+                if(excludeList.indexOf(p) != -1){
+                    list.push({
+                        name: file,
+                        path: p,
+                    });
+                }
             }
         }
     }
@@ -117,7 +129,12 @@ function getFolderLocalExcludeFilesList(dir, list = [], excludeList) {
 function loadImages(images, files) {
     for(let image of images) {
         try {
-            files.push({path: image.name, contents: fs.readFileSync(image.path)});
+            let ext = getExt(image.name);
+            if(ext != 'png' && ext != 'jpg'){
+                continue;
+            }
+
+            files.push({path: image.name, dir: image.path, contents: fs.readFileSync(image.path)});
         }
         catch(e) {
         }
@@ -213,6 +230,9 @@ fs.readFile(projectPath, (err, content) => {
     options.padding = project.sprite.padding;
     options.extrude = project.sprite.extrude;
     options.allowRotation = project.sprite.rotation;
+    options.maxSize = Number(project.sprite.size);
+    options.maxSpriteWidth = Number(project.sprite.width);
+    options.maxSpriteHeight = Number(project.sprite.height);
 
     //options.detectIdentical = true;
     options.allowTrim = true;
@@ -227,6 +247,7 @@ fs.readFile(projectPath, (err, content) => {
     options.packerMethod = "Smart";
 
     options.inputPath = inputPath;
+    options.outputPath = outputPath;
 
     options.includeList = project.includeList;
     options.excludeList = project.excludeList;
@@ -240,7 +261,7 @@ fs.readFile(projectPath, (err, content) => {
     for(let folder of allFolders){
         if(options.excludeList.indexOf(folder) != -1){
             console.log(chalk.yellowBright("exclude folder:" + folder));
-
+            //不需要打包的目录直接复制
             let out = path.resolve(outputPath, folder.replace(inputPath + "\\", ""));
             let outDir = path.dirname(out);
             if(!isExists(outDir)) {
@@ -254,6 +275,7 @@ fs.readFile(projectPath, (err, content) => {
         if(isExists(folder)) {
             let list = getFolderLocalFilesList(folder, [], options.excludeList);
             loadImages(list, files);
+            //不打包的图片直接复制
             let excludeList = getFolderLocalExcludeFilesList(folder, [], options.excludeList);
 
             for(let file of excludeList){
