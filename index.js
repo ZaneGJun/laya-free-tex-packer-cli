@@ -190,7 +190,9 @@ fs.readFile(projectPath, (err, content) => {
     //get all folders
     let allFolders = [];
     getFolderAllFoldersList(inputPath, allFolders);
+    console.log("-----allFolders-----");
     console.log(allFolders);
+    console.log("-----allFolders-----");
 
     // let options = project.packOptions;
     // //Map exporters to core format
@@ -255,10 +257,22 @@ fs.readFile(projectPath, (err, content) => {
 
     options.scaleDir = project.scaleDir;
 
+    //修正excludeList，需要将父文件夹底下所有子文件夹包含进来
+    let childsFoldersList = [];
+    for(let folder of options.excludeList){
+        if(isFolder(folder)){
+            getFolderAllFoldersList(folder, childsFoldersList);
+        }
+    }
+    options.excludeList = options.excludeList.concat(childsFoldersList);
+
+    console.log("-----excludeList-----");
     console.log(options.excludeList);
+    console.log("-----excludeList-----");
 
     //pack all single folder 
     for(let folder of allFolders){
+
         if(options.excludeList.indexOf(folder) != -1){
             console.log(chalk.yellowBright("exclude folder:" + folder));
             //不需要打包的目录直接复制
@@ -311,7 +325,7 @@ fs.readFile(projectPath, (err, content) => {
                 }
                 fs.writeFileSync(out, file.buffer);
             }
-    
+
             console.log(chalk.yellowBright("Done"));
         });
     }

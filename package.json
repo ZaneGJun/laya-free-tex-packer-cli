@@ -30,6 +30,6 @@
     "chalk": "^2.4.1",
     "free-tex-packer-core": "git+https://github.com/ZaneGJun/laya-free-tex-packer-core.git#",
     "optimist": "^0.6.1",
-	"fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0"
   }
 }
