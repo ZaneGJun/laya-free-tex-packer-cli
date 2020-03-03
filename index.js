@@ -246,7 +246,7 @@ fs.readFile(projectPath, (err, content) => {
     //options.tinifyKey = "";
 
     options.packer = "MaxRectsPacker";
-    options.packerMethod = "Smart";
+    options.packerMethod = "SmartArea";
 
     options.inputPath = inputPath;
     options.outputPath = outputPath;
